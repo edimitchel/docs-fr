@@ -50,6 +50,16 @@ const props = defineProps<Props>()
 </script>
 ```
 
+This also works if `Props` is imported from an external source. This feature requires TypeScript to be a peer dependency of Vue.
+
+```vue
+<script setup lang="ts">
+import type { Props } from './foo'
+
+const props = defineProps<Props>()
+</script>
+```
+
 #### Syntax Limitations {#syntax-limitations}
 
 In version 3.2 and below, the generic type parameter for `defineProps()` were limited to a type literal or a reference to a local interface.
@@ -142,6 +152,18 @@ In `<script setup>`, the `emit` function can also be typed using either runtime 
 <script setup lang="ts">
 // runtime
 const emit = defineEmits(['change', 'update'])
+
+// options based
+const emit = defineEmits({
+  change: (id: number) => {
+    // return `true` or `false` to indicate
+    // validation pass / fail
+  },
+  update: (value: string) => {
+    // return `true` or `false` to indicate
+    // validation pass / fail
+  }
+})
 
 // type-based
 const emit = defineEmits<{
@@ -351,6 +373,8 @@ onMounted(() => {
   <input ref="el" />
 </template>
 ```
+
+To get the right DOM interface you can check pages like [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#technical_summary).
 
 Note that for strict type safety, it is necessary to use optional chaining or type guards when accessing `el.value`. This is because the initial ref value is `null` until the component is mounted, and it can also be set to `null` if the referenced element is unmounted by `v-if`.
 
